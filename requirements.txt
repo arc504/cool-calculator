@@ -1,0 +1,2 @@
+# This is a pure HTML/CSS/JavaScript application
+# All it requires is you ;)
