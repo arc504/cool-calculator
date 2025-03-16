@@ -1,0 +1,456 @@
+/* Glassmorphism Calculator Styling */
+
+/* Base styling and variables */
+:root {
+    /* Theme toggle transition */
+    --transition-speed: 0.3s;
+    --primary-bg: rgba(255, 255, 255, 0.1);
+    --display-bg: rgba(255, 255, 255, 0.05);
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --button-hover: rgba(255, 255, 255, 0.2);
+    --number-color: rgba(255, 255, 255, 0.9);
+    --operator-bg: rgba(52, 152, 219, 0.3);
+    --operator-hover: rgba(52, 152, 219, 0.5);
+    --equals-bg: rgba(46, 204, 113, 0.3);
+    --equals-hover: rgba(46, 204, 113, 0.5);
+    --clear-bg: rgba(231, 76, 60, 0.3);
+    --clear-hover: rgba(231, 76, 60, 0.5);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --inner-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --border-radius: 20px;
+    --button-radius: 16px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(15px);
+}
+
+/* Dark theme (default) */
+:root.dark-theme {
+    --primary-bg: rgba(20, 20, 30, 0.8);
+    --display-bg: rgba(15, 15, 25, 0.9);
+    --button-bg: rgba(30, 30, 40, 0.9);
+    --button-hover: rgba(40, 40, 50, 0.95);
+    --number-color: rgba(255, 255, 255, 1);
+    --operator-bg: rgba(41, 128, 185, 0.7);
+    --operator-hover: rgba(52, 152, 219, 0.9);
+    --equals-bg: rgba(39, 174, 96, 0.7);
+    --equals-hover: rgba(46, 204, 113, 0.9);
+    --clear-bg: rgba(192, 57, 43, 0.7);
+    --clear-hover: rgba(231, 76, 60, 0.9);
+    --body-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+    --theme-icon: '🌙';
+}
+
+/* Light theme */
+:root.light-theme {
+    --primary-bg: rgba(255, 255, 255, 0.8);
+    --display-bg: rgba(255, 255, 255, 0.9);
+    --button-bg: rgba(255, 255, 255, 0.7);
+    --button-hover: rgba(255, 255, 255, 0.9);
+    --number-color: rgba(0, 0, 0, 0.8);
+    --operator-bg: rgba(52, 152, 219, 0.2);
+    --operator-hover: rgba(52, 152, 219, 0.4);
+    --equals-bg: rgba(46, 204, 113, 0.2);
+    --equals-hover: rgba(46, 204, 113, 0.4);
+    --clear-bg: rgba(231, 76, 60, 0.2);
+    --clear-hover: rgba(231, 76, 60, 0.4);
+    --body-bg: linear-gradient(135deg, #e0eafc, #cfdef3);
+    --theme-icon: '☀️';
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--body-bg);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: var(--number-color);
+    overflow: hidden;
+    position: relative;
+    transition: background var(--transition-speed) ease;
+}
+
+/* Calculator container with history */
+.calculator-container {
+    display: flex;
+    gap: 20px;
+    max-width: 700px;
+    width: 100%;
+    padding: 10px;
+}
+
+/* Calculator container */
+.calculator {
+    max-width: 350px;
+    width: 100%;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    background: var(--primary-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow);
+    border: var(--glass-border);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Glass effect overlay */
+.calculator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Additional glass shine effect */
+.calculator::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: rotate(25deg);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Display area */
+.display {
+    grid-column: 1 / -1;
+    background: var(--display-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 20px;
+    border-radius: var(--button-radius);
+    margin-bottom: 10px;
+    box-shadow: var(--inner-shadow);
+    border: var(--glass-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.previous-operand {
+    color: rgba(236, 240, 241, 0.7);
+    font-size: 1.2rem;
+    text-align: right;
+    height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.current-operand {
+    color: var(--number-color);
+    font-size: 2.5rem;
+    font-weight: 500;
+    text-align: right;
+    text-shadow: var(--text-shadow);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Button base styles */
+button {
+    border: var(--glass-border);
+    border-radius: var(--button-radius);
+    font-size: 1.4rem;
+    font-weight: 500;
+    padding: 15px 0;
+    cursor: pointer;
+    color: var(--number-color);
+    background: var(--button-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    text-shadow: var(--text-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: var(--button-radius) var(--button-radius) 0 0;
+}
+
+button:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Span two columns */
+.span-two {
+    grid-column: span 2;
+}
+
+/* Number buttons */
+.number {
+    background: var(--button-bg);
+}
+
+.number:hover {
+    background: var(--button-hover);
+}
+
+/* Operator buttons */
+.operator {
+    background: var(--operator-bg);
+    font-weight: 600;
+}
+
+.operator:hover {
+    background: var(--operator-hover);
+}
+
+/* Equals button */
+.equals {
+    background: var(--equals-bg);
+    font-weight: 600;
+}
+
+.equals:hover {
+    background: var(--equals-hover);
+}
+
+/* Clear and delete buttons */
+.clear, .delete {
+    background: var(--clear-bg);
+    font-weight: 600;
+}
+
+.clear:hover, .delete:hover {
+    background: var(--clear-hover);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--button-bg);
+    border: var(--glass-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.2rem;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(45deg);
+    background: var(--button-hover);
+}
+
+/* History container */
+.history-container {
+    max-width: 300px;
+    width: 100%;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    background: var(--primary-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow);
+    border: var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+}
+
+.history-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: var(--glass-border);
+}
+
+.history-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--number-color);
+}
+
+.clear-history {
+    background: var(--clear-bg);
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 12px;
+}
+
+.clear-history:hover {
+    background: var(--clear-hover);
+}
+
+.history-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 5px;
+}
+
+.history-item {
+    background: var(--display-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 12px 15px;
+    border-radius: var(--button-radius);
+    margin-bottom: 10px;
+    box-shadow: var(--inner-shadow);
+    border: var(--glass-border);
+    font-size: 1rem;
+    color: var(--number-color);
+    transition: all 0.2s ease;
+}
+
+.history-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom scrollbar for history list */
+.history-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .calculator-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .history-container {
+        max-width: 350px;
+        margin-top: 20px;
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 400px) {
+    .calculator {
+        padding: 15px;
+        grid-gap: 10px;
+    }
+    
+    button {
+        padding: 12px 0;
+        font-size: 1.2rem;
+    }
+    
+    .current-operand {
+        font-size: 2rem;
+    }
+}
+
+/* Voice control floating button */
+.voice-control-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--operator-bg);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.voice-control-button.active {
+    background: var(--clear-bg);
+    animation: pulse 1.5s infinite;
+}
+
+/* Calibrate and train buttons */
+.calibrate-button, .train-button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.calibrate-button {
+    background: linear-gradient(145deg, #4CAF50, #388E3C);
+}
+
+.calibrate-button:hover {
+    background: linear-gradient(145deg, #388E3C, #2E7D32);
+}
+
+.train-button {
+    background: linear-gradient(145deg, #2196F3, #1976D2);
+}
+
+.train-button:hover {
+    background: linear-gradient(145deg, #1976D2, #1565C0);
+}
